@@ -19,7 +19,7 @@
 
 @property (strong, nonatomic) ESTBeaconManager *beaconManager;
 @property (nonatomic, strong) ESTBeaconRegion *region;
-@property (strong, nonatomic) NSDictionary *beaconData;
+@property (strong, nonatomic) NSMutableDictionary *beaconData;
 
 @property (strong, nonatomic) NSMutableArray *chatheads;
 @property (strong, nonatomic) NSMutableArray *draggingCoordinators;
@@ -37,16 +37,18 @@
     [self startBeaconManager];
     
     // Fetch the Beacon JSON
-    [self fetchJSONFrom:@"http://www.rrnpilot.org/holding_institutions/1/beacons.json" withCallback:^(NSDictionary* parsedObject){
+    [self fetchJSONFrom:@"http://192.168.0.101:3000/holding_institutions/22/beacons.json" withCallback:^(NSMutableDictionary* beaconData){
         NSLog(@"Retrieved Beacon Data");
-        //self.beaconJSON = parsedObject;
-        self.beaconData = @{@1: @{@"title": @"You are near Raven and the First Man",
-                                    @"thumbnailUrl": @"http://www.billreidfoundation.org/banknote/images/raven.jpg",
-                                    @"url": @"http://www.google.com",
-                                    @"major":@27260,
-                                    @"minor":@55917
-                                    }
-                            };
+        self.beaconData = [self sanitizeBeaconData: beaconData];
+        
+//        self.beaconData = [self sanitizeBeaconData:[
+//            @{
+//              @"1": [@{@"notification" : @"You are near Raven and the First Man",
+//                    @"thumbnail_url" : @"http://www.billreidfoundation.org/banknote/images/raven.jpg",
+//                    @"url"           : @"http://www.google.com",
+//                    @"major"         : @"27260",
+//                    @"minor"         : @"55917"} mutableCopy]
+//             } mutableCopy]];
     }];
     
     // Observe Notifications
@@ -63,16 +65,28 @@
 }
 
 // Fetch json from the url and parse it
-- (void)fetchJSONFrom:(NSString*)urlAsString withCallback:(void (^)(NSDictionary*))callback
+- (void)fetchJSONFrom:(NSString*)urlAsString withCallback:(void (^)(NSMutableDictionary*))callback
 {
     NSURL *url = [[NSURL alloc] initWithString:urlAsString];
     NSLog(@"%@", urlAsString);
     
     [NSURLConnection sendAsynchronousRequest:[[NSURLRequest alloc] initWithURL:url] queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
-        NSDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:data options:0 error:&error];
+        NSLog(@"%@", response);
+        NSMutableDictionary *parsedObject = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingMutableContainers error:&error];
         
         callback(parsedObject);
     }];
+}
+
+// Ensure that the values returned in the JSON conform to an expected type
+- (NSMutableDictionary *)sanitizeBeaconData:(NSMutableDictionary *)beaconData
+{
+    for(id key in beaconData){
+        beaconData[key][@"major"] = [NSNumber numberWithInt:[beaconData[key][@"major"] intValue]];
+        beaconData[key][@"minor"] = [NSNumber numberWithInt:[beaconData[key][@"minor"] intValue]];
+    }
+    
+    return beaconData;
 }
 
 // load URL into webView
@@ -96,7 +110,7 @@
 
 - (NSDictionary*)beaconDataForChatHead:(CHDraggableView*)chathead
  {
-     return self.beaconData[@(chathead.tag)];
+     return self.beaconData[[@(chathead.tag) stringValue]];
  }
 
 - (NSDictionary*)beaconDataForMajor:(NSNumber*)major minor:(NSNumber*)minor
@@ -124,7 +138,7 @@
 
     NSLog(@"Adding chathead %@ %@", beacon.major, beacon.minor);
     
-    [self imageFromUrl:beaconData[@"thumbnailUrl"] withCallback:^(UIImage *image) {
+    [self imageFromUrl:beaconData[@"thumbnail_url"] withCallback:^(UIImage *image) {
         CHDraggableView *chathead = [CHDraggableView draggableViewWithImage: image];
         chathead.tag = [[self beaconDataKeyForMajor:beacon.major minor:beacon.minor] intValue];
         chathead.frame = CGRectMake(0, (chathead.frame.size.height + 10) * [_draggingCoordinators count], chathead.frame.size.width, chathead.frame.size.height);
@@ -203,8 +217,8 @@
 
 - (void)beaconManager:(ESTBeaconManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(ESTBeaconRegion *)region
 {
-    float maxDistance = 2;
-    NSLog(@"Ranged Beacons %@", beacons);
+    float maxDistance = 5;
+    NSLog(@"Ranged Beacons");
     ESTBeacon *beaconForChathead;
     // Remove Chatheads when beacons are no longer in the region
     // NOTE: Don't use an iterator because we're modifying the actual
@@ -226,8 +240,8 @@
     
     // Add chatheads for all beacons that are now in the region
     for (ESTBeacon *beacon in beacons) {
-        NSLog(@"Distance = %f", [beaconForChathead.distance floatValue]);
-        if (!beacon.distance || [beacon.distance floatValue] < maxDistance){
+        NSLog(@"Major %@ Minor %@ Distance %@", beacon.major, beacon.minor, beacon.distance);
+        if (0 < [beacon.distance floatValue] && [beacon.distance floatValue] < maxDistance){
             [self addChatHead:beacon];
         }
     }
