@@ -7,11 +7,7 @@
 //
 
 #import "RRNViewController.h"
-#import "WebViewController.h"
-
-#import "CHDraggableView.h"
-#import "CHDraggableView+Avatar.h"
-
+#import "RRNChatHead.h"
 #import "ESTBeaconManager.h"
 
 @interface RRNViewController () <ESTBeaconManagerDelegate>
@@ -21,8 +17,7 @@
 @property (nonatomic, strong) ESTBeaconRegion *region;
 @property (strong, nonatomic) NSMutableDictionary *beaconData;
 
-@property (strong, nonatomic) NSMutableArray *chatheads;
-@property (strong, nonatomic) NSMutableArray *draggingCoordinators;
+@property (strong, nonatomic) NSMutableArray *chatHeads;
 @end
 
 @implementation RRNViewController
@@ -60,8 +55,7 @@
                                                   }];
     
     // Keep track of Chatheads and dragging coordinators
-    _chatheads = [[NSMutableArray alloc] init];
-    _draggingCoordinators = [[NSMutableArray alloc] init];
+    self.chatHeads = [[NSMutableArray alloc] init];
 }
 
 // Fetch json from the url and parse it
@@ -97,28 +91,33 @@
     [self.webView loadRequest: urlRequest];
 }
 
-- (CHDraggableView*)chatHeadForBeacon:(ESTBeacon*)beacon
+- (RRNChatHead*)chatHeadForBeacon:(ESTBeacon*)beacon
 {
-    for (CHDraggableView *chathead in self.chatheads) {
-        NSDictionary *beaconData = [self beaconDataForChatHead:chathead];
+    for (RRNChatHead *chatHead in self.chatHeads) {
+        NSDictionary *beaconData = [self beaconDataForChatHead:chatHead];
         if ([beaconData[@"major"] isEqualToNumber:beacon.major] && [beaconData[@"minor"] isEqualToNumber:beacon.minor]){
-            return chathead;
+            return chatHead;
         }
     }
     return nil;
 }
 
-- (NSDictionary*)beaconDataForChatHead:(CHDraggableView*)chathead
- {
-     return self.beaconData[[@(chathead.tag) stringValue]];
- }
+- (NSDictionary*)beaconDataForChatHead:(RRNChatHead*)chatHead
+{
+    for(id key in self.beaconData){
+        if ([self.beaconData[key][@"major"] isEqualToNumber:chatHead.major] && [self.beaconData[key][@"minor"] isEqualToNumber:chatHead.minor]){
+            return self.beaconData[key];
+        }
+    }
+    return nil;
+}
 
 - (NSDictionary*)beaconDataForMajor:(NSNumber*)major minor:(NSNumber*)minor
 {
     return self.beaconData[[self beaconDataKeyForMajor:major minor:minor]];
 }
 
-- (NSNumber *)beaconDataKeyForMajor:(NSNumber*)major minor:(NSNumber*)minor
+- (NSString *)beaconDataKeyForMajor:(NSNumber*)major minor:(NSNumber*)minor
 {
     for(id key in self.beaconData){
         if ([self.beaconData[key][@"major"] isEqualToNumber:major] && [self.beaconData[key][@"minor"] isEqualToNumber:minor]){
@@ -136,43 +135,19 @@
     
     if (!beaconData) { return; } // We may not have beacon data for every beacon we detect
 
-    NSLog(@"Adding chathead %@ %@", beacon.major, beacon.minor);
     
     [self imageFromUrl:beaconData[@"thumbnail_url"] withCallback:^(UIImage *image) {
-        CHDraggableView *chathead = [CHDraggableView draggableViewWithImage: image];
-        chathead.tag = [[self beaconDataKeyForMajor:beacon.major minor:beacon.minor] intValue];
-        chathead.frame = CGRectMake(0, (chathead.frame.size.height + 10) * [_draggingCoordinators count], chathead.frame.size.width, chathead.frame.size.height);
-        
-        CHDraggingCoordinator *draggingCoordinator = [[CHDraggingCoordinator alloc] initWithWindow:self.view.window draggableViewBounds:chathead.bounds];
-        draggingCoordinator.delegate = self;
-        draggingCoordinator.snappingEdge = CHSnappingEdgeLeft;
-        chathead.delegate = draggingCoordinator;
-        
-        [self.chatheads addObject:chathead];
-        [self.draggingCoordinators addObject:draggingCoordinator];
-        
-        [self.view.window addSubview:chathead];
+        if ([self chatHeadForBeacon:beacon]) { return; } // Check for the beacon again in case we've added it since we sent out this callback
+        RRNChatHead *chatHead = [[RRNChatHead alloc] initWithMajor:beaconData[@"major"] minor:beaconData[@"minor"] image:image url:beaconData[@"url"]];
+        [self.chatHeads addObject:chatHead];
+        [chatHead addToView:self.view atX:0 Y:(chatHead.size.height + 10) * [self.chatHeads count]];
     }];
 }
 
-- (void)removeChatHead:(CHDraggableView *)chathead
+- (void)removeChatHead:(RRNChatHead *)chatHead
 {
-    NSDictionary *beaconData = [self beaconDataForChatHead:chathead];
-    NSLog(@"Removing chathead %@ %@", beaconData[@"major"], beaconData[@"minor"]);
-
-    CHDraggingCoordinator *draggingCoordinator = chathead.delegate;
-    chathead.delegate = nil;
-    
-    [self.chatheads removeObject:chathead];
-    [self.draggingCoordinators removeObject:draggingCoordinator];
-    [chathead removeFromSuperview];
-}
-
-- (UIViewController *)draggingCoordinator:(CHDraggingCoordinator *)coordinator viewControllerForDraggableView:(CHDraggableView *)chathead
-{
-    WebViewController *webView = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"WebViewController"];
-    webView.defaultUrl = [self beaconDataForChatHead:chathead][@"url"];
-    return webView;
+    [self.chatHeads removeObject:chatHead];
+    [chatHead removeFromView];
 }
 
 - (void)notifyLocally:(NSString*)message withURLAsString:(NSString*)url
@@ -220,12 +195,12 @@
     float maxDistance = 5;
     NSLog(@"Ranged Beacons");
     ESTBeacon *beaconForChathead;
-    // Remove Chatheads when beacons are no longer in the region
-    // NOTE: Don't use an iterator because we're modifying the actual
-    for (int i = [self.chatheads count] - 1; i >= 0; i--) {
+    // Remove Chatheads when beacons are no longer in the region, UNLESS they are currently active
+    // NOTE: Don't use an iterator because we're modifying the actual array
+    for (long i = [self.chatHeads count] - 1; i >= 0; i--) {
         beaconForChathead = nil;
-        CHDraggableView *chathead = [self.chatheads objectAtIndex:i];
-        NSDictionary *beaconData = [self beaconDataForChatHead:chathead];
+        RRNChatHead *chatHead = [self.chatHeads objectAtIndex:i];
+        NSDictionary *beaconData = [self beaconDataForChatHead:chatHead];
 
         for (ESTBeacon *beacon in beacons) {
             if ([beaconData[@"major"] isEqualToNumber:beacon.major] && [beaconData[@"minor"] isEqualToNumber:beacon.minor]){
@@ -234,7 +209,9 @@
             }
         }
         if (!beaconForChathead || [beaconForChathead.distance floatValue] > maxDistance){
-            [self removeChatHead:chathead];
+            if (![chatHead open]) {
+                [self removeChatHead:chatHead];
+            }
         }
     }
     

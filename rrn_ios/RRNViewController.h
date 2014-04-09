@@ -8,9 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-#import "CHDraggingCoordinator.h"
-
 #import "ESTBeacon.h"
 
-@interface RRNViewController : UIViewController <CHDraggingCoordinatorDelegate>
+@interface RRNViewController : UIViewController
 @end
