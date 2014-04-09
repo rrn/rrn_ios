@@ -209,7 +209,7 @@
             }
         }
         if (!beaconForChathead || [beaconForChathead.distance floatValue] > maxDistance){
-            if (![chatHead open]) {
+            if ([chatHead isClosed]) {
                 [self removeChatHead:chatHead];
             }
         }

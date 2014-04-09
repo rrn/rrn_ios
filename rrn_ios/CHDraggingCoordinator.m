@@ -40,6 +40,11 @@ typedef enum {
     return self;
 }
 
+- (bool)isInConversation
+{
+    return _state == CHInteractionStateConversation;
+}
+
 #pragma mark - Geometry
 
 - (CGRect)_dropArea
@@ -131,11 +136,25 @@ typedef enum {
 - (void)draggableViewTouched:(CHDraggableView *)view
 {
     if (_state == CHInteractionStateNormal) {
+        [self openConversationArea:view];
+    } else if(_state == CHInteractionStateConversation) {
+        [self closeConversationArea:view];
+    }
+}
+
+- (void)openConversationArea:(CHDraggableView *)view
+{
+    if (_state == CHInteractionStateNormal) {
         _state = CHInteractionStateConversation;
         [self _animateViewToConversationArea:view];
         
         [self _presentViewControllerForDraggableView:view];
-    } else if(_state == CHInteractionStateConversation) {
+    }
+}
+
+- (void)closeConversationArea:(CHDraggableView *)view
+{
+    if (_state == CHInteractionStateConversation){
         _state = CHInteractionStateNormal;
         NSValue *knownEdgePoint = [_edgePointDictionary objectForKey:@(view.tag)];
         if (knownEdgePoint) {

@@ -54,6 +54,10 @@
 {
     NSLog(@"Removing chathead %@ %@", self.major, self.minor);
     
+    // Close the chathead before removing it;
+    if ([self isOpen]){
+        [self.draggingCoordinator closeConversationArea:self.draggableView];
+    }
     self.draggableView.delegate = nil;
     self.draggingCoordinator = nil;
     [self.draggableView removeFromSuperview];
@@ -69,5 +73,14 @@
 - (CGSize)size
 {
     return self.draggableView.frame.size;
+}
+
+- (bool)isOpen
+{
+    return [self.draggingCoordinator isInConversation];
+}
+- (bool)isClosed
+{
+    return ![self.draggingCoordinator isInConversation];
 }
 @end

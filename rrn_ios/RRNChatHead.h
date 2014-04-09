@@ -12,11 +12,12 @@
 @interface RRNChatHead : NSObject  <CHDraggingCoordinatorDelegate>
 @property (strong, nonatomic) NSNumber *major;
 @property (strong, nonatomic) NSNumber *minor;
-@property bool open; // Is the chathead popped open
 
 - (id)initWithMajor:(NSNumber *)major minor:(NSNumber *)minor image:(UIImage *)image url:(NSString *)urlAsString;
 - (void)addToView:(UIView *)view atX:(float)x Y:(float)y;
 - (void)removeFromView;
 - (CGSize)size;
+- (bool)isOpen;
+- (bool)isClosed;
 @end
 

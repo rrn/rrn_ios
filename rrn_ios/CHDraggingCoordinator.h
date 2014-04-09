@@ -23,7 +23,9 @@ typedef enum {
 @property (nonatomic, weak) id<CHDraggingCoordinatorDelegate> delegate;
 
 - (id)initWithWindow:(UIWindow *)window draggableViewBounds:(CGRect)bounds;
-
+- (bool)isInConversation;
+- (void)openConversationArea:(CHDraggableView *)view;
+- (void)closeConversationArea:(CHDraggableView *)view;
 @end
 
 @protocol CHDraggingCoordinatorDelegate <NSObject>
