@@ -32,7 +32,7 @@
     [self startBeaconManager];
     
     // Fetch the Beacon JSON
-    [self fetchJSONFrom:@"http://192.168.0.101:3000/holding_institutions/22/beacons.json" withCallback:^(NSMutableDictionary* beaconData){
+    [self fetchJSONFrom:@"http://www.rrncommunity.org/holding_institutions/1/beacons.json" withCallback:^(NSMutableDictionary* beaconData){
         NSLog(@"Retrieved Beacon Data");
         self.beaconData = [self sanitizeBeaconData: beaconData];
         
@@ -192,7 +192,7 @@
 
 - (void)beaconManager:(ESTBeaconManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(ESTBeaconRegion *)region
 {
-    float maxDistance = 5;
+//    float maxDistance = 3;
     NSLog(@"Ranged Beacons");
     ESTBeacon *beaconForChathead;
     // Remove Chatheads when beacons are no longer in the region, UNLESS they are currently active
@@ -208,7 +208,7 @@
                 break;
             }
         }
-        if (!beaconForChathead || [beaconForChathead.distance floatValue] > maxDistance){
+        if (!beaconForChathead || [beaconForChathead.distance floatValue] > 20){
             if ([chatHead isClosed]) {
                 [self removeChatHead:chatHead];
             }
@@ -217,8 +217,8 @@
     
     // Add chatheads for all beacons that are now in the region
     for (ESTBeacon *beacon in beacons) {
-        NSLog(@"Major %@ Minor %@ Distance %@", beacon.major, beacon.minor, beacon.distance);
-        if (0 < [beacon.distance floatValue] && [beacon.distance floatValue] < maxDistance){
+        NSLog(@"%@:%@ %@m, %@, %li, %d", beacon.major, beacon.minor, beacon.distance, beacon.measuredPower, (long)beacon.rssi, beacon.proximity);
+        if (0 < [beacon.distance floatValue] && [beacon.distance floatValue] < 17){
             [self addChatHead:beacon];
         }
     }
