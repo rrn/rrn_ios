@@ -116,55 +116,23 @@ typedef enum {
 
 - (void)draggableView:(CHDraggableView *)view didMoveToPoint:(CGPoint)point
 {
-    if (_state == CHInteractionStateConversation) {
-        if (_presentedNavigationController) {
-            [self _dismissPresentedNavigationController];
-        }
-    }
+
 }
 
 - (void)draggableViewReleased:(CHDraggableView *)view
 {
     if (_state == CHInteractionStateNormal) {
         [self _animateViewToEdges:view];
-    } else if(_state == CHInteractionStateConversation) {
-        [self _animateViewToConversationArea:view];
-        [self _presentViewControllerForDraggableView:view];
     }
 }
 
 - (void)draggableViewTouched:(CHDraggableView *)view
 {
     if (_state == CHInteractionStateNormal) {
-        [self openConversationArea:view];
-    } else if(_state == CHInteractionStateConversation) {
-        [self closeConversationArea:view];
+        [self.delegate draggableViewTouched];
     }
 }
 
-- (void)openConversationArea:(CHDraggableView *)view
-{
-    if (_state == CHInteractionStateNormal) {
-        _state = CHInteractionStateConversation;
-        [self _animateViewToConversationArea:view];
-        
-        [self _presentViewControllerForDraggableView:view];
-    }
-}
-
-- (void)closeConversationArea:(CHDraggableView *)view
-{
-    if (_state == CHInteractionStateConversation){
-        _state = CHInteractionStateNormal;
-        NSValue *knownEdgePoint = [_edgePointDictionary objectForKey:@(view.tag)];
-        if (knownEdgePoint) {
-            [self _animateView:view toEdgePoint:[knownEdgePoint CGPointValue]];
-        } else {
-            [self _animateViewToEdges:view];
-        }
-        [self _dismissPresentedNavigationController];
-    }
-}
 
 #pragma mark - Alignment
 
@@ -192,84 +160,6 @@ typedef enum {
     CGRect conversationArea = [self _conversationArea];
     CGPoint center = CGPointMake(CGRectGetMidX(conversationArea), CGRectGetMidY(conversationArea));
     [view snapViewCenterToPoint:center edge:[self _destinationEdgeForReleasePointInCurrentState:view.center]];
-}
-
-#pragma mark - View Controller Handling
-
-- (CGRect)_navigationControllerFrame
-{
-    CGRect slice;
-    CGRect remainder;
-    CGRectDivide([self.window.screen applicationFrame], &slice, &remainder, CGRectGetMaxY([self _conversationArea]), CGRectMinYEdge);
-    return remainder;
-}
-
-- (CGRect)_navigationControllerHiddenFrame
-{
-    return CGRectMake(CGRectGetMidX([self _conversationArea]), CGRectGetMaxY([self _conversationArea]), 0, 0);
-}
-
-- (void)_presentViewControllerForDraggableView:(CHDraggableView *)draggableView
-{
-    _presentedNavigationController = [_delegate draggingCoordinator:self viewControllerForDraggableView:draggableView];
-    
-    _presentedNavigationController.view.layer.cornerRadius = 3;
-    _presentedNavigationController.view.layer.masksToBounds = YES;
-    _presentedNavigationController.view.layer.anchorPoint = CGPointMake(0.5f, 0);
-    _presentedNavigationController.view.frame = [self _navigationControllerFrame];
-    _presentedNavigationController.view.transform = CGAffineTransformMakeScale(0, 0);
-    
-    [self.window insertSubview:_presentedNavigationController.view belowSubview:draggableView];
-    [self _unhidePresentedNavigationControllerCompletion:^{}];
-}
-
-- (void)_dismissPresentedNavigationController
-{
-    UIViewController *reference = _presentedNavigationController;
-    [self _hidePresentedNavigationControllerCompletion:^{
-        [reference.view removeFromSuperview];
-    }];
-    _presentedNavigationController = nil;
-}
-
-- (void)_unhidePresentedNavigationControllerCompletion:(void(^)())completionBlock
-{
-    CGAffineTransform transformStep1 = CGAffineTransformMakeScale(1.1f, 1.1f);
-    CGAffineTransform transformStep2 = CGAffineTransformMakeScale(1, 1);
-    
-    _backgroundView = [[UIView alloc] initWithFrame:[self.window bounds]];
-    _backgroundView.backgroundColor = [UIColor colorWithWhite:0.000 alpha:0.5f];
-    _backgroundView.alpha = 0.0f;
-    [self.window insertSubview:_backgroundView belowSubview:_presentedNavigationController.view];
-    
-    [UIView animateWithDuration:0.3f delay:0.0f options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        _presentedNavigationController.view.layer.affineTransform = transformStep1;
-        _backgroundView.alpha = 1.0f;
-    }completion:^(BOOL finished){
-        if (finished) {
-            [UIView animateWithDuration:0.3f animations:^{
-                _presentedNavigationController.view.layer.affineTransform = transformStep2;
-            }];
-        }
-    }];
-}
-
-- (void)_hidePresentedNavigationControllerCompletion:(void(^)())completionBlock
-{
-    UIView *viewToDisplay = _backgroundView;
-    [UIView animateWithDuration:0.3f delay:0.0 options:UIViewAnimationOptionCurveEaseInOut animations:^{
-        _presentedNavigationController.view.transform = CGAffineTransformMakeScale(0, 0);
-        _presentedNavigationController.view.alpha = 0.0f;
-        _backgroundView.alpha = 0.0f;
-    } completion:^(BOOL finished){
-        if (finished) {
-            [viewToDisplay removeFromSuperview];
-            if (viewToDisplay == _backgroundView) {
-                _backgroundView = nil;
-            }
-            completionBlock();
-        }
-    }];
 }
 
 @end

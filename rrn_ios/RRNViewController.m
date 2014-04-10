@@ -138,7 +138,12 @@
     
     [self imageFromUrl:beaconData[@"thumbnail_url"] withCallback:^(UIImage *image) {
         if ([self chatHeadForBeacon:beacon]) { return; } // Check for the beacon again in case we've added it since we sent out this callback
-        RRNChatHead *chatHead = [[RRNChatHead alloc] initWithMajor:beaconData[@"major"] minor:beaconData[@"minor"] image:image url:beaconData[@"url"]];
+        RRNChatHead *chatHead = [[RRNChatHead alloc] initWithMajor:beaconData[@"major"] minor:beaconData[@"minor"] image:image url:beaconData[@"url"] callback:^(RRNChatHead *chatHead)
+        {
+            if (chatHead.url){
+                [self goToUrl:chatHead.url];
+            }
+        }];
         [self.chatHeads addObject:chatHead];
         [chatHead addToView:self.view atX:0 Y:(chatHead.size.height + 10) * [self.chatHeads count]];
     }];

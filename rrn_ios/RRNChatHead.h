@@ -12,8 +12,9 @@
 @interface RRNChatHead : NSObject  <CHDraggingCoordinatorDelegate>
 @property (strong, nonatomic) NSNumber *major;
 @property (strong, nonatomic) NSNumber *minor;
+@property (strong, nonatomic) NSString *url;
 
-- (id)initWithMajor:(NSNumber *)major minor:(NSNumber *)minor image:(UIImage *)image url:(NSString *)urlAsString;
+- (id)initWithMajor:(NSNumber *)major minor:(NSNumber *)minor image:(UIImage *)image url:(NSString *)urlAsString callback:(void (^)(RRNChatHead *chatHead))callback;
 - (void)addToView:(UIView *)view atX:(float)x Y:(float)y;
 - (void)removeFromView;
 - (CGSize)size;

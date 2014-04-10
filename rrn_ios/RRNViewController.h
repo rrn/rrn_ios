@@ -11,4 +11,5 @@
 #import "ESTBeacon.h"
 
 @interface RRNViewController : UIViewController
+- (void)goToUrl:(NSString*)urlAsString;
 @end

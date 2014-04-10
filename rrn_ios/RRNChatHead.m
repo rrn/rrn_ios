@@ -11,11 +11,10 @@
 #import "CHDraggableView.h"
 #import "CHDraggableView+Avatar.h"
 
-#import "WebViewController.h"
+#import "RRNViewController.h"
 
 @interface RRNChatHead ()
-
-@property (strong, nonatomic) NSString *url;
+@property (nonatomic, copy) void (^callback)(RRNChatHead *chatHead);
 @property (strong, nonatomic) CHDraggableView *draggableView;
 @property (strong, nonatomic) CHDraggingCoordinator *draggingCoordinator;
 
@@ -23,13 +22,14 @@
 
 @implementation RRNChatHead
 
-- (id)initWithMajor:(NSNumber *)major minor:(NSNumber *)minor image:(UIImage *)image url:(NSString *)urlAsString
+- (id)initWithMajor:(NSNumber *)major minor:(NSNumber *)minor image:(UIImage *)image url:(NSString *)urlAsString callback:(void (^)(RRNChatHead *chatHead))callback
 {
     self = [super init];
     if (self) {
         self.major = major;
         self.minor = minor;
         self.url = urlAsString;
+        self.callback = callback;
         self.draggableView = [CHDraggableView draggableViewWithImage: image];
     }
     return self;
@@ -54,20 +54,14 @@
 {
     NSLog(@"Removing chathead %@ %@", self.major, self.minor);
     
-    // Close the chathead before removing it;
-    if ([self isOpen]){
-        [self.draggingCoordinator closeConversationArea:self.draggableView];
-    }
     self.draggableView.delegate = nil;
     self.draggingCoordinator = nil;
     [self.draggableView removeFromSuperview];
 }
 
-- (UIViewController *)draggingCoordinator:(CHDraggingCoordinator *)coordinator viewControllerForDraggableView:(CHDraggableView *)chathead
+- (void)draggableViewTouched
 {
-    WebViewController *webView = [[UIStoryboard storyboardWithName:@"Main" bundle:nil] instantiateViewControllerWithIdentifier:@"WebViewController"];
-    webView.defaultUrl = self.url; // Set the web view's default url so it displays when the view opens
-    return webView;
+    self.callback(self);
 }
 
 - (CGSize)size
@@ -77,10 +71,12 @@
 
 - (bool)isOpen
 {
-    return [self.draggingCoordinator isInConversation];
+    return false;
+//    return [self.draggingCoordinator isInConversation];
 }
 - (bool)isClosed
 {
-    return ![self.draggingCoordinator isInConversation];
+    return true;
+//    return ![self.draggingCoordinator isInConversation];
 }
 @end

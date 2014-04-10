@@ -23,7 +23,6 @@
 		E1615CF718EF207A00F631C1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1615CF518EF207A00F631C1 /* InfoPlist.strings */; };
 		E1615CF918EF207A00F631C1 /* rrn_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1615CF818EF207A00F631C1 /* rrn_iosTests.m */; };
 		E19631D118F5BC180005F989 /* RRNChatHead.m in Sources */ = {isa = PBXBuildFile; fileRef = E19631D018F5BC180005F989 /* RRNChatHead.m */; };
-		E197C8EC18EF221800942B53 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8EB18EF221800942B53 /* WebViewController.m */; };
 		E197C8F618EF2ABB00942B53 /* CHAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8EF18EF2ABB00942B53 /* CHAvatarView.m */; };
 		E197C8F718EF2ABB00942B53 /* CHDraggableView+Avatar.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8F118EF2ABB00942B53 /* CHDraggableView+Avatar.m */; };
 		E197C8F818EF2ABB00942B53 /* CHDraggableView.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8F318EF2ABB00942B53 /* CHDraggableView.m */; };
@@ -66,8 +65,6 @@
 		E1615CF818EF207A00F631C1 /* rrn_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = rrn_iosTests.m; sourceTree = "<group>"; };
 		E19631CF18F5BC180005F989 /* RRNChatHead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRNChatHead.h; sourceTree = "<group>"; };
 		E19631D018F5BC180005F989 /* RRNChatHead.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRNChatHead.m; sourceTree = "<group>"; };
-		E197C8EA18EF221800942B53 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
-		E197C8EB18EF221800942B53 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
 		E197C8EE18EF2ABB00942B53 /* CHAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHAvatarView.h; sourceTree = "<group>"; };
 		E197C8EF18EF2ABB00942B53 /* CHAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHAvatarView.m; sourceTree = "<group>"; };
 		E197C8F018EF2ABB00942B53 /* CHDraggableView+Avatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CHDraggableView+Avatar.h"; sourceTree = "<group>"; };
@@ -143,17 +140,15 @@
 			isa = PBXGroup;
 			children = (
 				E197C8ED18EF2AAA00942B53 /* Chatheads */,
-				E197C8EA18EF221800942B53 /* WebViewController.h */,
-				E197C8EB18EF221800942B53 /* WebViewController.m */,
 				E1615CDC18EF207900F631C1 /* RRNAppDelegate.h */,
 				E1615CDD18EF207900F631C1 /* RRNAppDelegate.m */,
 				E1615CDF18EF207900F631C1 /* Main.storyboard */,
 				E1615CE218EF207900F631C1 /* RRNViewController.h */,
 				E1615CE318EF207900F631C1 /* RRNViewController.m */,
-				E1615CE518EF207900F631C1 /* Images.xcassets */,
-				E1615CD418EF207900F631C1 /* Supporting Files */,
 				E19631CF18F5BC180005F989 /* RRNChatHead.h */,
 				E19631D018F5BC180005F989 /* RRNChatHead.m */,
+				E1615CE518EF207900F631C1 /* Images.xcassets */,
+				E1615CD418EF207900F631C1 /* Supporting Files */,
 			);
 			path = rrn_ios;
 			sourceTree = "<group>";
@@ -364,7 +359,6 @@
 				E197C8F618EF2ABB00942B53 /* CHAvatarView.m in Sources */,
 				E197C90018EF2ACC00942B53 /* SKBounceAnimation.m in Sources */,
 				E19631D118F5BC180005F989 /* RRNChatHead.m in Sources */,
-				E197C8EC18EF221800942B53 /* WebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
