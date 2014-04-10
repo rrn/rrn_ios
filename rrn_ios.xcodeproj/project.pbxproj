@@ -22,14 +22,6 @@
 		E1615CEF18EF207900F631C1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1615CD118EF207900F631C1 /* UIKit.framework */; };
 		E1615CF718EF207A00F631C1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1615CF518EF207A00F631C1 /* InfoPlist.strings */; };
 		E1615CF918EF207A00F631C1 /* rrn_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1615CF818EF207A00F631C1 /* rrn_iosTests.m */; };
-		E19631D118F5BC180005F989 /* RRNChatHead.m in Sources */ = {isa = PBXBuildFile; fileRef = E19631D018F5BC180005F989 /* RRNChatHead.m */; };
-		E197C8EC18EF221800942B53 /* WebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8EB18EF221800942B53 /* WebViewController.m */; };
-		E197C8F618EF2ABB00942B53 /* CHAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8EF18EF2ABB00942B53 /* CHAvatarView.m */; };
-		E197C8F718EF2ABB00942B53 /* CHDraggableView+Avatar.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8F118EF2ABB00942B53 /* CHDraggableView+Avatar.m */; };
-		E197C8F818EF2ABB00942B53 /* CHDraggableView.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8F318EF2ABB00942B53 /* CHDraggableView.m */; };
-		E197C8F918EF2ABB00942B53 /* CHDraggingCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8F518EF2ABB00942B53 /* CHDraggingCoordinator.m */; };
-		E197C8FF18EF2ACC00942B53 /* CAAnimation+Blocks.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8FC18EF2ACC00942B53 /* CAAnimation+Blocks.m */; };
-		E197C90018EF2ACC00942B53 /* SKBounceAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = E197C8FE18EF2ACC00942B53 /* SKBounceAnimation.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,22 +56,6 @@
 		E1615CF418EF207900F631C1 /* rrn_iosTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "rrn_iosTests-Info.plist"; sourceTree = "<group>"; };
 		E1615CF618EF207A00F631C1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E1615CF818EF207A00F631C1 /* rrn_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = rrn_iosTests.m; sourceTree = "<group>"; };
-		E19631CF18F5BC180005F989 /* RRNChatHead.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRNChatHead.h; sourceTree = "<group>"; };
-		E19631D018F5BC180005F989 /* RRNChatHead.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRNChatHead.m; sourceTree = "<group>"; };
-		E197C8EA18EF221800942B53 /* WebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewController.h; sourceTree = "<group>"; };
-		E197C8EB18EF221800942B53 /* WebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewController.m; sourceTree = "<group>"; };
-		E197C8EE18EF2ABB00942B53 /* CHAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHAvatarView.h; sourceTree = "<group>"; };
-		E197C8EF18EF2ABB00942B53 /* CHAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHAvatarView.m; sourceTree = "<group>"; };
-		E197C8F018EF2ABB00942B53 /* CHDraggableView+Avatar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CHDraggableView+Avatar.h"; sourceTree = "<group>"; };
-		E197C8F118EF2ABB00942B53 /* CHDraggableView+Avatar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CHDraggableView+Avatar.m"; sourceTree = "<group>"; };
-		E197C8F218EF2ABB00942B53 /* CHDraggableView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHDraggableView.h; sourceTree = "<group>"; };
-		E197C8F318EF2ABB00942B53 /* CHDraggableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHDraggableView.m; sourceTree = "<group>"; };
-		E197C8F418EF2ABB00942B53 /* CHDraggingCoordinator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CHDraggingCoordinator.h; sourceTree = "<group>"; };
-		E197C8F518EF2ABB00942B53 /* CHDraggingCoordinator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CHDraggingCoordinator.m; sourceTree = "<group>"; };
-		E197C8FB18EF2ACC00942B53 /* CAAnimation+Blocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CAAnimation+Blocks.h"; sourceTree = "<group>"; };
-		E197C8FC18EF2ACC00942B53 /* CAAnimation+Blocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CAAnimation+Blocks.m"; sourceTree = "<group>"; };
-		E197C8FD18EF2ACC00942B53 /* SKBounceAnimation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SKBounceAnimation.h; sourceTree = "<group>"; };
-		E197C8FE18EF2ACC00942B53 /* SKBounceAnimation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SKBounceAnimation.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,9 +118,6 @@
 		E1615CD318EF207900F631C1 /* rrn_ios */ = {
 			isa = PBXGroup;
 			children = (
-				E197C8ED18EF2AAA00942B53 /* Chatheads */,
-				E197C8EA18EF221800942B53 /* WebViewController.h */,
-				E197C8EB18EF221800942B53 /* WebViewController.m */,
 				E1615CDC18EF207900F631C1 /* RRNAppDelegate.h */,
 				E1615CDD18EF207900F631C1 /* RRNAppDelegate.m */,
 				E1615CDF18EF207900F631C1 /* Main.storyboard */,
@@ -152,8 +125,6 @@
 				E1615CE318EF207900F631C1 /* RRNViewController.m */,
 				E1615CE518EF207900F631C1 /* Images.xcassets */,
 				E1615CD418EF207900F631C1 /* Supporting Files */,
-				E19631CF18F5BC180005F989 /* RRNChatHead.h */,
-				E19631D018F5BC180005F989 /* RRNChatHead.m */,
 			);
 			path = rrn_ios;
 			sourceTree = "<group>";
@@ -185,33 +156,6 @@
 				E1615CF518EF207A00F631C1 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		E197C8ED18EF2AAA00942B53 /* Chatheads */ = {
-			isa = PBXGroup;
-			children = (
-				E197C8FA18EF2AC100942B53 /* Externals */,
-				E197C8EE18EF2ABB00942B53 /* CHAvatarView.h */,
-				E197C8EF18EF2ABB00942B53 /* CHAvatarView.m */,
-				E197C8F018EF2ABB00942B53 /* CHDraggableView+Avatar.h */,
-				E197C8F118EF2ABB00942B53 /* CHDraggableView+Avatar.m */,
-				E197C8F218EF2ABB00942B53 /* CHDraggableView.h */,
-				E197C8F318EF2ABB00942B53 /* CHDraggableView.m */,
-				E197C8F418EF2ABB00942B53 /* CHDraggingCoordinator.h */,
-				E197C8F518EF2ABB00942B53 /* CHDraggingCoordinator.m */,
-			);
-			name = Chatheads;
-			sourceTree = "<group>";
-		};
-		E197C8FA18EF2AC100942B53 /* Externals */ = {
-			isa = PBXGroup;
-			children = (
-				E197C8FB18EF2ACC00942B53 /* CAAnimation+Blocks.h */,
-				E197C8FC18EF2ACC00942B53 /* CAAnimation+Blocks.m */,
-				E197C8FD18EF2ACC00942B53 /* SKBounceAnimation.h */,
-				E197C8FE18EF2ACC00942B53 /* SKBounceAnimation.m */,
-			);
-			name = Externals;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -354,17 +298,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E197C8F818EF2ABB00942B53 /* CHDraggableView.m in Sources */,
 				E1615CDA18EF207900F631C1 /* main.m in Sources */,
 				E1615CDE18EF207900F631C1 /* RRNAppDelegate.m in Sources */,
-				E197C8F718EF2ABB00942B53 /* CHDraggableView+Avatar.m in Sources */,
-				E197C8F918EF2ABB00942B53 /* CHDraggingCoordinator.m in Sources */,
-				E197C8FF18EF2ACC00942B53 /* CAAnimation+Blocks.m in Sources */,
 				E1615CE418EF207900F631C1 /* RRNViewController.m in Sources */,
-				E197C8F618EF2ABB00942B53 /* CHAvatarView.m in Sources */,
-				E197C90018EF2ACC00942B53 /* SKBounceAnimation.m in Sources */,
-				E19631D118F5BC180005F989 /* RRNChatHead.m in Sources */,
-				E197C8EC18EF221800942B53 /* WebViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
