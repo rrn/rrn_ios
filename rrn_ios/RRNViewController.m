@@ -43,11 +43,33 @@
                                                   usingBlock:^(NSNotification *notification) {
                                                       [self goToUrl: notification.userInfo[@"url"]];
                                                   }];
+    // Init button style
+    self.beaconButton.clipsToBounds = YES;
+    
+    CALayer *layer = self.beaconButton.layer;
+    layer.cornerRadius = 35;
+    layer.masksToBounds = YES;
+    
+    CALayer *shadowLayer = [CALayer new];
+    shadowLayer.frame = self.beaconButton.frame;
+    
+    shadowLayer.cornerRadius = 35;
+    
+    shadowLayer.backgroundColor = [UIColor whiteColor].CGColor;
+    shadowLayer.opacity = 0.5;
+    shadowLayer.shadowColor = [UIColor blackColor].CGColor;
+    shadowLayer.shadowOpacity = 0.6;
+    shadowLayer.shadowOffset = CGSizeMake(1,1);
+    shadowLayer.shadowRadius = 3;
+    
+    UIView* parent = self.beaconButton.superview;
+    [parent.layer insertSublayer:shadowLayer below:self.beaconButton.layer];
 }
 
 - (IBAction)goToBeaconContent:(UIButton *)sender
 {
-    NSLog(@"Hello World!");
+    NSDictionary *beaconData = [self beaconDataForTag:sender.tag];
+    [self goToUrl:beaconData[@"url"]];
 }
 
 // Fetch json from the url and parse it
@@ -81,6 +103,26 @@
     NSURL *url = [[NSURL alloc] initWithString:urlAsString];
     NSURLRequest* urlRequest = [NSURLRequest requestWithURL:url];
     [self.webView loadRequest: urlRequest];
+}
+
+- (void)imageFromUrl:(NSString*)urlAsString withCallback:(void(^)(UIImage *image))callback
+{
+    NSURL *url = [NSURL URLWithString:urlAsString];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+        if ( !error )
+        {
+            UIImage *image = [[UIImage alloc] initWithData:data];
+            callback(image);
+        } else {
+            NSLog(@"%@", error);
+        }
+    }];
+}
+
+- (NSDictionary*)beaconDataForTag:(int)tag
+{
+    return self.beaconData[[@(tag) stringValue]];
 }
 
 - (NSDictionary*)beaconDataForMajor:(NSNumber*)major minor:(NSNumber*)minor
@@ -123,15 +165,22 @@
     for (ESTBeacon *beacon in beacons) {
         NSLog(@"%@:%@ %@m, %@", beacon.major, beacon.minor, beacon.distance, beacon.measuredPower);
         if (0 < [beacon.distance floatValue] && [beacon.distance floatValue] < 17){
-            if (!closestBeacon || beacon.distance < closestBeacon.distance) {
+            if (!closestBeacon || [beacon.distance floatValue] < [closestBeacon.distance floatValue]) {
                 closestBeacon = beacon;
             }
         }
     }
     
     if (closestBeacon) {
+        int beaconTag = [[self beaconDataKeyForMajor:closestBeacon.major minor:closestBeacon.minor] intValue];
+        NSDictionary *beaconData = [self beaconDataForMajor:closestBeacon.major minor:closestBeacon.minor];
+        
         [self.beaconButton setHidden:false];
-        [self.beaconButton setTitle:[closestBeacon.minor stringValue] forState:UIControlStateNormal];
+        [self.beaconButton setTag:beaconTag];
+        [self imageFromUrl: beaconData[@"thumbnail_url"] withCallback:^(UIImage *image) {
+            [self.beaconButton setImage:image forState:UIControlStateNormal];
+        }];
+
     } else {
         [self.beaconButton setHidden:true];
     }
