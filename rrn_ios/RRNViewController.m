@@ -7,16 +7,16 @@
 //
 
 #import "RRNViewController.h"
+#import "RRNBeaconButton.h"
 #import "ESTBeaconManager.h"
 
 @interface RRNViewController () <ESTBeaconManagerDelegate>
 @property (strong, nonatomic) IBOutlet UIWebView *webView;
 
-@property (weak, nonatomic) IBOutlet UIButton *beaconButton;
-
 @property (strong, nonatomic) ESTBeaconManager *beaconManager;
 @property (nonatomic, strong) ESTBeaconRegion *region;
 @property (strong, nonatomic) NSMutableDictionary *beaconData;
+@property (strong, nonatomic) NSMutableArray *beaconButtons;
 @end
 
 @implementation RRNViewController
@@ -25,6 +25,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    
+    self.beaconButtons = [[NSMutableArray alloc] init];
     
     [self goToUrl: @"http://m.rrnpilot.org"];
     
@@ -43,33 +45,6 @@
                                                   usingBlock:^(NSNotification *notification) {
                                                       [self goToUrl: notification.userInfo[@"url"]];
                                                   }];
-    // Init button style
-    self.beaconButton.clipsToBounds = YES;
-    
-    CALayer *layer = self.beaconButton.layer;
-    layer.cornerRadius = 35;
-    layer.masksToBounds = YES;
-    
-    CALayer *shadowLayer = [CALayer new];
-    shadowLayer.frame = self.beaconButton.frame;
-    
-    shadowLayer.cornerRadius = 35;
-    
-    shadowLayer.backgroundColor = [UIColor whiteColor].CGColor;
-    shadowLayer.opacity = 0.5;
-    shadowLayer.shadowColor = [UIColor blackColor].CGColor;
-    shadowLayer.shadowOpacity = 0.6;
-    shadowLayer.shadowOffset = CGSizeMake(1,1);
-    shadowLayer.shadowRadius = 3;
-    
-    UIView* parent = self.beaconButton.superview;
-    [parent.layer insertSublayer:shadowLayer below:self.beaconButton.layer];
-}
-
-- (IBAction)goToBeaconContent:(UIButton *)sender
-{
-    NSDictionary *beaconData = [self beaconDataForTag:sender.tag];
-    [self goToUrl:beaconData[@"url"]];
 }
 
 // Fetch json from the url and parse it
@@ -139,6 +114,51 @@
     }
     return nil;
 }
+- (RRNBeaconButton *)beaconButtonForBeacon:(ESTBeacon *)beacon
+{
+    for(RRNBeaconButton *beaconButton in self.beaconButtons){
+        if ([beaconButton.major isEqualToNumber:beacon.major] && [beaconButton.minor isEqualToNumber:beacon.minor]){
+            return beaconButton;
+        }
+    }
+    return nil;
+}
+
+- (void)addBeaconButton:(ESTBeacon *)beacon
+{
+    if ([self beaconButtonForBeacon:beacon]){ return; }
+    
+    NSDictionary *beaconData = [self beaconDataForMajor:beacon.major minor:beacon.minor];
+    
+    if (!beaconData){ return; }
+    
+    [self imageFromUrl: beaconData[@"thumbnail_url"] withCallback:^(UIImage *image) {
+        if ([self beaconButtonForBeacon:beacon]){ return; } // If we've already created a button for this beacon while we were fetching the image, don't make another
+
+        RRNBeaconButton *beaconButton = [[RRNBeaconButton alloc] initWithMajor:beaconData[@"major"] minor:beaconData[@"minor"] image:image url:beaconData[@"url"]];
+        [self.beaconButtons addObject:beaconButton];
+
+        [beaconButton addToView:self.view atX:(self.view.frame.size.width - [beaconButton size].width)/2  Y:(self.view.frame.size.height - [beaconButton size].height * 0.9)];
+        
+        [beaconButton addTarget:self action:@selector(beaconButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+        
+    }];
+}
+
+- (void)removeBeaconButton:(RRNBeaconButton *)beaconButton
+{
+    [self.beaconButtons removeObject:beaconButton];
+    [beaconButton removeFromView];
+}
+
+- (void)beaconButtonPressed:(RRNBeaconButton *)beaconButton
+{
+    NSLog(@"Pressed");
+    
+    NSDictionary *beaconData = [self beaconDataForMajor:beaconButton.major minor:beaconButton.minor];
+    [self goToUrl:beaconData[@"url"]];
+    
+}
 
 - (void)startBeaconManager
 {
@@ -160,8 +180,10 @@
 {
     NSLog(@"Ranged Beacons");
     
-    // Add chatheads for all beacons that are now in the region
+    RRNBeaconButton *currentBeaconButton = [self.beaconButtons firstObject];
+    ESTBeacon *currentBeacon;
     ESTBeacon *closestBeacon;
+    
     for (ESTBeacon *beacon in beacons) {
         NSLog(@"%@:%@ %@m, %@", beacon.major, beacon.minor, beacon.distance, beacon.measuredPower);
         if (0 < [beacon.distance floatValue] && [beacon.distance floatValue] < 17){
@@ -169,20 +191,19 @@
                 closestBeacon = beacon;
             }
         }
+        if (currentBeaconButton && currentBeaconButton.major == beacon.major && currentBeaconButton.minor == beacon.minor){
+            currentBeacon = beacon;
+        }
     }
     
     if (closestBeacon) {
-        int beaconTag = [[self beaconDataKeyForMajor:closestBeacon.major minor:closestBeacon.minor] intValue];
-        NSDictionary *beaconData = [self beaconDataForMajor:closestBeacon.major minor:closestBeacon.minor];
-        
-        [self.beaconButton setHidden:false];
-        [self.beaconButton setTag:beaconTag];
-        [self imageFromUrl: beaconData[@"thumbnail_url"] withCallback:^(UIImage *image) {
-            [self.beaconButton setImage:image forState:UIControlStateNormal];
-        }];
-
+        if ( currentBeacon && [currentBeacon.distance floatValue] - [closestBeacon.distance floatValue] < 2) { return; }
+        if (currentBeaconButton && currentBeaconButton != [self beaconButtonForBeacon:closestBeacon]){
+            [self removeBeaconButton:currentBeaconButton];
+        }
+        [self addBeaconButton:closestBeacon];
     } else {
-        [self.beaconButton setHidden:true];
+        [self removeBeaconButton:currentBeaconButton];
     }
 }
 @end

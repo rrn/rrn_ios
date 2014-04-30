@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		34A304BB4B75428496901417 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 70501651D7E24FCBA5FA6851 /* libPods.a */; };
+		E124D49718F7552D007E679B /* RRNBeaconButton.m in Sources */ = {isa = PBXBuildFile; fileRef = E124D49618F7552D007E679B /* RRNBeaconButton.m */; };
 		E1615CCE18EF207900F631C1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1615CCD18EF207900F631C1 /* Foundation.framework */; };
 		E1615CD018EF207900F631C1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1615CCF18EF207900F631C1 /* CoreGraphics.framework */; };
 		E1615CD218EF207900F631C1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1615CD118EF207900F631C1 /* UIKit.framework */; };
@@ -37,6 +38,8 @@
 /* Begin PBXFileReference section */
 		70501651D7E24FCBA5FA6851 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		81E64A1301B442AAA0646515 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
+		E124D49518F7552D007E679B /* RRNBeaconButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRNBeaconButton.h; sourceTree = "<group>"; };
+		E124D49618F7552D007E679B /* RRNBeaconButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRNBeaconButton.m; sourceTree = "<group>"; };
 		E1615CCA18EF207900F631C1 /* rrn_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rrn_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1615CCD18EF207900F631C1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E1615CCF18EF207900F631C1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -118,12 +121,14 @@
 		E1615CD318EF207900F631C1 /* rrn_ios */ = {
 			isa = PBXGroup;
 			children = (
+				E1615CE518EF207900F631C1 /* Images.xcassets */,
+				E1615CDF18EF207900F631C1 /* Main.storyboard */,
 				E1615CDC18EF207900F631C1 /* RRNAppDelegate.h */,
 				E1615CDD18EF207900F631C1 /* RRNAppDelegate.m */,
-				E1615CDF18EF207900F631C1 /* Main.storyboard */,
+				E124D49518F7552D007E679B /* RRNBeaconButton.h */,
+				E124D49618F7552D007E679B /* RRNBeaconButton.m */,
 				E1615CE218EF207900F631C1 /* RRNViewController.h */,
 				E1615CE318EF207900F631C1 /* RRNViewController.m */,
-				E1615CE518EF207900F631C1 /* Images.xcassets */,
 				E1615CD418EF207900F631C1 /* Supporting Files */,
 			);
 			path = rrn_ios;
@@ -300,6 +305,7 @@
 			files = (
 				E1615CDA18EF207900F631C1 /* main.m in Sources */,
 				E1615CDE18EF207900F631C1 /* RRNAppDelegate.m in Sources */,
+				E124D49718F7552D007E679B /* RRNBeaconButton.m in Sources */,
 				E1615CE418EF207900F631C1 /* RRNViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
