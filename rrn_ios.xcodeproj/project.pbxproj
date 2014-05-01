@@ -23,6 +23,7 @@
 		E1615CEF18EF207900F631C1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1615CD118EF207900F631C1 /* UIKit.framework */; };
 		E1615CF718EF207A00F631C1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E1615CF518EF207A00F631C1 /* InfoPlist.strings */; };
 		E1615CF918EF207A00F631C1 /* rrn_iosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E1615CF818EF207A00F631C1 /* rrn_iosTests.m */; };
+		E1F168F61911B52A00A3DCD0 /* RRNBeaconAudioPlayer.m in Sources */ = {isa = PBXBuildFile; fileRef = E1F168F51911B52A00A3DCD0 /* RRNBeaconAudioPlayer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -40,7 +41,7 @@
 		81E64A1301B442AAA0646515 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		E124D49518F7552D007E679B /* RRNBeaconButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRNBeaconButton.h; sourceTree = "<group>"; };
 		E124D49618F7552D007E679B /* RRNBeaconButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRNBeaconButton.m; sourceTree = "<group>"; };
-		E1615CCA18EF207900F631C1 /* rrn_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rrn_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E1615CCA18EF207900F631C1 /* MoA Mobile.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MoA Mobile.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E1615CCD18EF207900F631C1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		E1615CCF18EF207900F631C1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		E1615CD118EF207900F631C1 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
@@ -59,6 +60,8 @@
 		E1615CF418EF207900F631C1 /* rrn_iosTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "rrn_iosTests-Info.plist"; sourceTree = "<group>"; };
 		E1615CF618EF207A00F631C1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		E1615CF818EF207A00F631C1 /* rrn_iosTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = rrn_iosTests.m; sourceTree = "<group>"; };
+		E1F168F41911B52A00A3DCD0 /* RRNBeaconAudioPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RRNBeaconAudioPlayer.h; sourceTree = "<group>"; };
+		E1F168F51911B52A00A3DCD0 /* RRNBeaconAudioPlayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RRNBeaconAudioPlayer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +103,7 @@
 		E1615CCB18EF207900F631C1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E1615CCA18EF207900F631C1 /* rrn_ios.app */,
+				E1615CCA18EF207900F631C1 /* MoA Mobile.app */,
 				E1615CEB18EF207900F631C1 /* rrn_iosTests.xctest */,
 			);
 			name = Products;
@@ -125,6 +128,8 @@
 				E1615CDF18EF207900F631C1 /* Main.storyboard */,
 				E1615CDC18EF207900F631C1 /* RRNAppDelegate.h */,
 				E1615CDD18EF207900F631C1 /* RRNAppDelegate.m */,
+				E1F168F41911B52A00A3DCD0 /* RRNBeaconAudioPlayer.h */,
+				E1F168F51911B52A00A3DCD0 /* RRNBeaconAudioPlayer.m */,
 				E124D49518F7552D007E679B /* RRNBeaconButton.h */,
 				E124D49618F7552D007E679B /* RRNBeaconButton.m */,
 				E1615CE218EF207900F631C1 /* RRNViewController.h */,
@@ -182,7 +187,7 @@
 			);
 			name = rrn_ios;
 			productName = rrn_ios;
-			productReference = E1615CCA18EF207900F631C1 /* rrn_ios.app */;
+			productReference = E1615CCA18EF207900F631C1 /* MoA Mobile.app */;
 			productType = "com.apple.product-type.application";
 		};
 		E1615CEA18EF207900F631C1 /* rrn_iosTests */ = {
@@ -303,6 +308,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E1F168F61911B52A00A3DCD0 /* RRNBeaconAudioPlayer.m in Sources */,
 				E1615CDA18EF207900F631C1 /* main.m in Sources */,
 				E1615CDE18EF207900F631C1 /* RRNAppDelegate.m in Sources */,
 				E124D49718F7552D007E679B /* RRNBeaconButton.m in Sources */,
@@ -435,7 +441,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "rrn_ios/rrn_ios-Prefix.pch";
 				INFOPLIST_FILE = "rrn_ios/rrn_ios-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "MoA Mobile";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -449,7 +455,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "rrn_ios/rrn_ios-Prefix.pch";
 				INFOPLIST_FILE = "rrn_ios/rrn_ios-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "MoA Mobile";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

@@ -7,6 +7,7 @@
 //
 
 #import "RRNBeaconButton.h"
+#import <AudioToolbox/AudioToolbox.h>
 
 @interface RRNBeaconButton ()
 
@@ -24,9 +25,9 @@
         self.url = urlAsString;
         
         // Init button style
-        self.frame = CGRectMake(0,0,70,70);
+        self.frame = CGRectMake(0,0,100,100);
         self.clipsToBounds = YES;
-        self.layer.cornerRadius = 35;
+        self.layer.cornerRadius = self.frame.size.height / 2;
         self.layer.masksToBounds = YES;
         
         [self setHidden:false];
@@ -34,7 +35,7 @@
         
         // Shadow Style
         self.buttonShadow = [UIView new];
-        self.buttonShadow.layer.cornerRadius = 35;
+        self.buttonShadow.layer.cornerRadius = self.layer.cornerRadius;
         
         self.buttonShadow.layer.backgroundColor = [UIColor whiteColor].CGColor;
         self.buttonShadow.layer.opacity = 1;
@@ -56,8 +57,11 @@
     
     [view addSubview:self.buttonShadow];
     [view addSubview:self];
-    [UIView animateWithDuration:0.125
+    [self playSound];
+    [UIView animateWithDuration:0.25
                           delay:0.125
+         usingSpringWithDamping:0.4
+          initialSpringVelocity:1
                         options:UIViewAnimationOptionCurveEaseOut
                      animations:^{
                          self.frame = CGRectMake(x,y,self.frame.size.width,self.frame.size.height);
@@ -81,6 +85,11 @@
                          [self removeFromSuperview];
                          [self.buttonShadow removeFromSuperview];
                      }];
+}
+
+-(void)playSound
+{
+    AudioServicesPlaySystemSound(1103); // Tink Sound
 }
 
 - (CGSize)size

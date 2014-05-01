@@ -8,11 +8,14 @@
 
 #import "RRNViewController.h"
 #import "RRNBeaconButton.h"
+#import "RRNBeaconAudioPlayer.h"
 #import "ESTBeaconManager.h"
 
 @interface RRNViewController () <ESTBeaconManagerDelegate>
 @property (strong, nonatomic) IBOutlet UIWebView *webView;
+@property (strong, nonatomic) IBOutlet UIButton *audioButton;
 
+@property (strong, nonatomic) RRNBeaconAudioPlayer *audioPlayer;
 @property (strong, nonatomic) ESTBeaconManager *beaconManager;
 @property (nonatomic, strong) ESTBeaconRegion *region;
 @property (strong, nonatomic) NSMutableDictionary *beaconData;
@@ -27,6 +30,9 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     self.beaconButtons = [[NSMutableArray alloc] init];
+    
+    self.audioPlayer = [[RRNBeaconAudioPlayer alloc] init];
+    [self.audioPlayer setEnabled:self.audioButton.selected];
     
     [self goToUrl: @"http://m.rrnpilot.org"];
     
@@ -143,6 +149,8 @@
         [beaconButton addTarget:self action:@selector(beaconButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
     }];
+    
+    [self.audioPlayer playUrl:@"https://archive.org/download/testmp3testfile/mpthreetest.mp3"];
 }
 
 - (void)removeBeaconButton:(RRNBeaconButton *)beaconButton
@@ -158,6 +166,11 @@
     NSDictionary *beaconData = [self beaconDataForMajor:beaconButton.major minor:beaconButton.minor];
     [self goToUrl:beaconData[@"url"]];
     
+}
+
+- (IBAction)toggleAudio:(id)sender {
+    self.audioButton.selected = !self.audioButton.selected;
+    [self.audioPlayer setEnabled:self.audioButton.selected];
 }
 
 - (void)startBeaconManager
