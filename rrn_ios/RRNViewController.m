@@ -20,6 +20,7 @@
 @property (nonatomic, strong) ESTBeaconRegion *region;
 @property (strong, nonatomic) NSMutableDictionary *beaconData;
 @property (strong, nonatomic) NSMutableArray *beaconButtons;
+@property (nonatomic)         CFTimeInterval lastBeaconButtonSwap;
 @end
 
 @implementation RRNViewController
@@ -30,7 +31,7 @@
 	// Do any additional setup after loading the view, typically from a nib.
     
     self.beaconButtons = [[NSMutableArray alloc] init];
-    
+    self.lastBeaconButtonSwap = 0;
     self.audioPlayer = [[RRNBeaconAudioPlayer alloc] init];
     [self.audioPlayer setEnabled:self.audioButton.selected];
     
@@ -191,6 +192,8 @@
 
 - (void)beaconManager:(ESTBeaconManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(ESTBeaconRegion *)region
 {
+    NSLog(@"%f", CACurrentMediaTime() - self.lastBeaconButtonSwap);
+
     NSLog(@"Ranged Beacons");
     
     RRNBeaconButton *currentBeaconButton = [self.beaconButtons firstObject];
@@ -198,22 +201,33 @@
     ESTBeacon *closestBeacon;
     
     for (ESTBeacon *beacon in beacons) {
-        NSLog(@"%@:%@ %@m, %@", beacon.major, beacon.minor, beacon.distance, beacon.measuredPower);
+        NSLog(@"%@:%@ %@m", beacon.major, beacon.minor, beacon.distance);
         if (0 < [beacon.distance floatValue] && [beacon.distance floatValue] < 17){
             if (!closestBeacon || [beacon.distance floatValue] < [closestBeacon.distance floatValue]) {
                 closestBeacon = beacon;
             }
         }
-        if (currentBeaconButton && currentBeaconButton.major == beacon.major && currentBeaconButton.minor == beacon.minor){
+        if (currentBeaconButton && [currentBeaconButton.major floatValue] == [beacon.major floatValue] && [currentBeaconButton.minor floatValue] == [beacon.minor floatValue]){
             currentBeacon = beacon;
         }
     }
     
     if (closestBeacon) {
-        if ( currentBeacon && [currentBeacon.distance floatValue] - [closestBeacon.distance floatValue] < 2) { return; }
-        if (currentBeaconButton && currentBeaconButton != [self beaconButtonForBeacon:closestBeacon]){
+
+        // Only replace the current beacon if we're more than 4 meters closer (prevents flipflopping between beacons due to distance inaccuracy)
+        if ( currentBeacon && [currentBeacon.distance floatValue] < [closestBeacon.distance floatValue] + 2.5) { return; }
+
+        BOOL willSwap = currentBeaconButton && currentBeaconButton != [self beaconButtonForBeacon:closestBeacon];
+
+        // Don't swap the beacons more than once every 5 seconds
+        if (willSwap && CACurrentMediaTime() - self.lastBeaconButtonSwap < 5){ return; }
+        
+        // If the current beacon isn't the closest beacon, remove it
+        if (willSwap){
+            self.lastBeaconButtonSwap = CACurrentMediaTime();
             [self removeBeaconButton:currentBeaconButton];
         }
+
         [self addBeaconButton:closestBeacon];
     } else {
         [self removeBeaconButton:currentBeaconButton];
