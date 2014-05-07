@@ -18,7 +18,7 @@
 @property (strong, nonatomic) RRNBeaconAudioPlayer *audioPlayer;
 @property (strong, nonatomic) ESTBeaconManager *beaconManager;
 @property (nonatomic, strong) ESTBeaconRegion *region;
-@property (strong, nonatomic) NSMutableDictionary *beaconData;
+@property (strong, nonatomic) NSArray *beaconData;
 @property (strong, nonatomic) NSMutableArray *beaconButtons;
 @property (nonatomic)         CFTimeInterval lastBeaconButtonSwap;
 @end
@@ -40,8 +40,8 @@
     [self startBeaconManager];
     
     // Fetch the Beacon JSON
-    [self fetchJSONFrom:@"http://www.rrncommunity.org/holding_institutions/1/beacons.json" withCallback:^(NSMutableDictionary* beaconData){
-        NSLog(@"Retrieved Beacon Data");
+    [self fetchJSONFrom:@"http://192.168.0.199:3000/holding_institutions/1/point_of_interests.json" withCallback:^(NSMutableDictionary* beaconData){
+        NSLog(@"Retrieved Beacon Data %@", beaconData);
         self.beaconData = [self sanitizeBeaconData: beaconData];
     }];
     
@@ -69,14 +69,16 @@
 }
 
 // Ensure that the values returned in the JSON conform to an expected type
-- (NSMutableDictionary *)sanitizeBeaconData:(NSMutableDictionary *)beaconData
+- (NSMutableArray *)sanitizeBeaconData:(NSMutableDictionary *)beaconData
 {
-    for(id key in beaconData){
-        beaconData[key][@"major"] = [NSNumber numberWithInt:[beaconData[key][@"major"] intValue]];
-        beaconData[key][@"minor"] = [NSNumber numberWithInt:[beaconData[key][@"minor"] intValue]];
+    NSMutableArray *output = [[NSMutableArray alloc] init];
+    for(NSMutableDictionary *data in beaconData){
+        data[@"major"] = [NSNumber numberWithInt:[data[@"major"] intValue]];
+        data[@"minor"] = [NSNumber numberWithInt:[data[@"minor"] intValue]];
+        [output addObject:data];
     }
     
-    return beaconData;
+    return output;
 }
 
 // load URL into webView
@@ -102,25 +104,16 @@
     }];
 }
 
-- (NSDictionary*)beaconDataForTag:(int)tag
-{
-    return self.beaconData[[@(tag) stringValue]];
-}
-
 - (NSDictionary*)beaconDataForMajor:(NSNumber*)major minor:(NSNumber*)minor
 {
-    return self.beaconData[[self beaconDataKeyForMajor:major minor:minor]];
-}
-
-- (NSString *)beaconDataKeyForMajor:(NSNumber*)major minor:(NSNumber*)minor
-{
-    for(id key in self.beaconData){
-        if ([self.beaconData[key][@"major"] isEqualToNumber:major] && [self.beaconData[key][@"minor"] isEqualToNumber:minor]){
-            return key;
+    for(NSDictionary *beaconData in self.beaconData){
+        if ([beaconData[@"major"] isEqualToNumber:major] && [beaconData[@"minor"] isEqualToNumber:minor]){
+            return beaconData;
         }
     }
-    return nil;
+    return NULL;
 }
+
 - (RRNBeaconButton *)beaconButtonForBeacon:(ESTBeacon *)beacon
 {
     for(RRNBeaconButton *beaconButton in self.beaconButtons){
@@ -128,7 +121,7 @@
             return beaconButton;
         }
     }
-    return nil;
+    return NULL;
 }
 
 - (void)addBeaconButton:(ESTBeacon *)beacon
