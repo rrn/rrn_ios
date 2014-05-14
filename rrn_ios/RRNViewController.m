@@ -40,7 +40,7 @@
     [self startBeaconManager];
     
     // Fetch the Beacon JSON
-    [self fetchJSONFrom:@"http://192.168.0.199:3000/holding_institutions/1/point_of_interests.json" withCallback:^(NSMutableDictionary* beaconData){
+    [self fetchJSONFrom:@"http://www.rrncommunity.org/holding_institutions/1/point_of_interests.json" withCallback:^(NSMutableDictionary* beaconData){
         NSLog(@"Retrieved Beacon Data %@", beaconData);
         self.beaconData = [self sanitizeBeaconData: beaconData];
     }];
